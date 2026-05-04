@@ -1,4 +1,5 @@
 import { View, Text } from "react-native";
+import { Feather } from "@expo/vector-icons";
 import { colors } from "../constants/theme";
 
 interface Props {
@@ -8,19 +9,19 @@ interface Props {
   rightIcon?: "sun" | "moon";
 }
 
-const SUN = "✦";
-const MOON = "☽";
+function Icon({ type }: { type: "sun" | "moon" }) {
+  return type === "sun"
+    ? <Feather name="sun" size={13} color={colors.muted} />
+    : <Text style={{ fontSize: 12, color: colors.muted }}>☽</Text>;
+}
 
 export default function SectionHeader({ number, title, leftIcon, rightIcon }: Props) {
-  const iconChar = (icon: "sun" | "moon") => (icon === "sun" ? SUN : MOON);
-
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 14, paddingBottom: 0 }}>
-      {leftIcon && (
-        <Text style={{ fontSize: 11, color: colors.muted, marginRight: 6 }}>
-          {iconChar(leftIcon)}
-        </Text>
-      )}
+    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 14 }}>
+      {leftIcon
+        ? <View style={{ marginRight: 6 }}><Icon type={leftIcon} /></View>
+        : <View style={{ width: 19 }} />
+      }
       <Text
         style={{
           flex: 1,
@@ -33,9 +34,7 @@ export default function SectionHeader({ number, title, leftIcon, rightIcon }: Pr
         {number} - {title}
       </Text>
       {rightIcon && (
-        <Text style={{ fontSize: 11, color: colors.muted, marginLeft: 6 }}>
-          {iconChar(rightIcon)}
-        </Text>
+        <View style={{ marginLeft: 6 }}><Icon type={rightIcon} /></View>
       )}
     </View>
   );

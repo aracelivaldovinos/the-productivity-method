@@ -33,18 +33,21 @@ function createEmptyPlan(date: string): DailyPlan {
   };
 }
 
-function storageKey(date: string) {
-  return `planner_${date}`;
+export type PlannerTab = "personal" | "work" | "project" | "study";
+
+// Each tab + date gets its own isolated storage key
+function storageKey(date: string, tab: PlannerTab) {
+  return `planner_${date}_${tab}`;
 }
 
-export function usePlanner(date: string) {
+export function usePlanner(date: string, tab: PlannerTab) {
   const [plan, setPlan] = useState<DailyPlan>(() => createEmptyPlan(date));
   const [loading, setLoading] = useState(true);
 
-  // Load plan from AsyncStorage when date changes
+  // Reload whenever date OR tab changes
   useEffect(() => {
     setLoading(true);
-    AsyncStorage.getItem(storageKey(date)).then((raw) => {
+    AsyncStorage.getItem(storageKey(date, tab)).then((raw) => {
       if (raw) {
         setPlan(JSON.parse(raw));
       } else {
@@ -52,18 +55,16 @@ export function usePlanner(date: string) {
       }
       setLoading(false);
     });
-  }, [date]);
+  }, [date, tab]);
 
-  // Save plan to AsyncStorage whenever it changes
   const save = useCallback(
     async (updated: DailyPlan) => {
       setPlan(updated);
-      await AsyncStorage.setItem(storageKey(date), JSON.stringify(updated));
+      await AsyncStorage.setItem(storageKey(date, tab), JSON.stringify(updated));
     },
-    [date]
+    [date, tab]
   );
 
-  // Helper: update a single top-level field
   const update = useCallback(
     <K extends keyof DailyPlan>(field: K, value: DailyPlan[K]) => {
       save({ ...plan, [field]: value });
