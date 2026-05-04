@@ -19,7 +19,7 @@ export default function TimeBlock({ plan, update }: Props) {
     <View style={{ marginBottom: 28 }}>
       <SectionHeader number={4} title="TIME-BLOCK YOUR SCHEDULE" leftIcon="sun" rightIcon="moon" />
 
-      <ScrollView style={{ maxHeight: 740 }} showsVerticalScrollIndicator={false} nestedScrollEnabled>
+      <ScrollView style={{ maxHeight: 1120 }} showsVerticalScrollIndicator={false} nestedScrollEnabled>
         {plan.timeBlocks.map((block, i) => (
           <View
             key={block.time}

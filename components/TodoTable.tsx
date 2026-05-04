@@ -106,7 +106,7 @@ export default function TodoTable({ plan, update }: Props) {
   return (
     <View style={{ marginBottom: 28 }}>
       <SectionHeader number={2} title="WRITE OUT YOUR TO-DO TABLE" leftIcon="sun" />
-      <View style={{ flexDirection: isTablet ? "row" : "column", gap: 16, marginBottom: 16 }}>
+      <View style={{ flexDirection: "column", gap: 16, marginBottom: 16 }}>
         <View style={{ flex: 1 }}>
           <TodoGroup label="QUICK TICKS" timeLabel="< 5mins"
             items={plan.quickTicks} onUpdate={(items) => update("quickTicks", items)} />
