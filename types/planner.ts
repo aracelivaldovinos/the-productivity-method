@@ -1,5 +1,10 @@
 export type Priority = 1 | 2 | 3;
 
+export interface Stroke {
+  d: string;      // SVG path data
+  width: number;  // stroke width
+}
+
 export interface TodoItem {
   id: string;
   text: string;
@@ -42,4 +47,7 @@ export interface DailyPlan {
   proudOf: string;
   doBetter: string;
   notes: string;
+
+  // Drawing paths — each entry is one pen stroke
+  drawings: Stroke[];
 }

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, useWindowDimensions } from "react-native";
 import { DailyPlan, TodoItem, Priority } from "../types/planner";
 import SectionHeader from "./SectionHeader";
 import { colors } from "../constants/theme";
@@ -100,10 +100,13 @@ function TodoGroup({ label, timeLabel, items, onUpdate }: {
 }
 
 export default function TodoTable({ plan, update }: Props) {
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
+
   return (
     <View style={{ marginBottom: 28 }}>
       <SectionHeader number={2} title="WRITE OUT YOUR TO-DO TABLE" leftIcon="sun" />
-      <View style={{ flexDirection: "row", gap: 16, marginBottom: 16 }}>
+      <View style={{ flexDirection: isTablet ? "row" : "column", gap: 16, marginBottom: 16 }}>
         <View style={{ flex: 1 }}>
           <TodoGroup label="QUICK TICKS" timeLabel="< 5mins"
             items={plan.quickTicks} onUpdate={(items) => update("quickTicks", items)} />

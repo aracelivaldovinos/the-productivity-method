@@ -10,6 +10,8 @@ import TimeBlock from "../components/TimeBlock";
 import FocusReview from "../components/FocusReview";
 import Reflection from "../components/Reflection";
 import TabBar from "../components/TabBar";
+import DrawingCanvas from "../components/DrawingCanvas";
+import DrawingToolbar from "../components/DrawingToolbar";
 import { colors } from "../constants/theme";
 
 function today() {
@@ -32,6 +34,7 @@ export default function PlannerScreen() {
   const params = useLocalSearchParams<{ date?: string; tab?: PlannerTab }>();
   const [date, setDate] = useState(params.date ?? today());
   const [activeTab, setActiveTab] = useState<PlannerTab>(params.tab ?? "personal");
+  const [drawMode, setDrawMode] = useState(false);
   const isToday = date === today();
   const { plan, update, loading } = usePlanner(date, activeTab);
   const { width } = useWindowDimensions();
@@ -39,7 +42,7 @@ export default function PlannerScreen() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.bg }}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "transparent" }}>
         <Text style={{ color: colors.muted, fontSize: 14 }}>Loading...</Text>
       </View>
     );
@@ -58,14 +61,36 @@ export default function PlannerScreen() {
         >
           8 - M I N U T E   D A I L Y   P L A N N I N G   M E T H O D
         </Text>
-        <View style={{ flex: 1, alignItems: "flex-end" }}>
+        <View style={{ flex: 1, alignItems: "flex-end", flexDirection: "row", justifyContent: "flex-end", gap: 8 }}>
+          {/* Draw controls */}
+          {drawMode && (
+            <>
+              <TouchableOpacity
+                onPress={() => plan.drawings.length > 0 && update("drawings", plan.drawings.slice(0, -1))}
+                style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 10, paddingVertical: 6, borderWidth: 1, borderColor: colors.faint, borderRadius: 4, opacity: plan.drawings.length > 0 ? 1 : 0.35 }}
+              >
+                <Feather name="corner-up-left" size={12} color={colors.muted} />
+                <Text style={{ fontSize: 11, color: colors.muted }}>Undo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => plan.drawings.length > 0 && update("drawings", [])}
+                style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 10, paddingVertical: 6, borderWidth: 1, borderColor: colors.faint, borderRadius: 4, opacity: plan.drawings.length > 0 ? 1 : 0.35 }}
+              >
+                <Feather name="trash-2" size={12} color={colors.muted} />
+                <Text style={{ fontSize: 11, color: colors.muted }}>Clear</Text>
+              </TouchableOpacity>
+            </>
+          )}
+          <TouchableOpacity
+            onPress={() => setDrawMode((d) => !d)}
+            style={{ flexDirection: "row", alignItems: "center", gap: 5, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, borderColor: drawMode ? colors.ink : colors.faint, borderRadius: 4, backgroundColor: drawMode ? colors.ink : "transparent" }}
+          >
+            <Feather name="edit-3" size={13} color={drawMode ? colors.card : colors.muted} />
+            <Text style={{ fontSize: 11, color: drawMode ? colors.card : colors.muted, fontWeight: drawMode ? "600" : "400" }}>{drawMode ? "Drawing" : "Draw"}</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => router.push({ pathname: "/history", params: { tab: activeTab } })}
-            style={{
-              flexDirection: "row", alignItems: "center", gap: 5,
-              paddingHorizontal: 12, paddingVertical: 6,
-              borderWidth: 1, borderColor: colors.faint, borderRadius: 4,
-            }}
+            style={{ flexDirection: "row", alignItems: "center", gap: 5, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, borderColor: colors.faint, borderRadius: 4 }}
           >
             <Feather name="calendar" size={13} color={colors.muted} />
             <Text style={{ fontSize: 11, color: colors.muted }}>History</Text>
@@ -81,8 +106,9 @@ export default function PlannerScreen() {
           backgroundColor: colors.card,
           marginHorizontal: isTablet ? 40 : 16,
           marginBottom: 40,
-          borderBottomLeftRadius: 4,
-          borderBottomRightRadius: 4,
+          borderTopRightRadius: 12,
+          borderBottomLeftRadius: 12,
+          borderBottomRightRadius: 12,
           borderWidth: 1,
           borderColor: "#e4e4e0",
           shadowColor: "#000",
@@ -92,6 +118,7 @@ export default function PlannerScreen() {
           elevation: 2,
           flexDirection: isTablet ? "row" : "column",
           alignItems: isTablet ? "flex-start" : undefined,
+          position: "relative",
         }}
       >
         {/* LEFT COLUMN */}
@@ -139,6 +166,13 @@ export default function PlannerScreen() {
           <FocusReview plan={plan} update={update} />
           <Reflection plan={plan} update={update} />
         </View>
+
+        {/* Drawing overlay — always rendered so strokes persist when toggling draw mode */}
+        <DrawingCanvas
+          paths={plan.drawings}
+          onSave={(paths) => update("drawings", paths)}
+          active={drawMode}
+        />
       </View>
     </ScrollView>
   );

@@ -30,6 +30,7 @@ function createEmptyPlan(date: string): DailyPlan {
     proudOf: "",
     doBetter: "",
     notes: "",
+    drawings: [],
   };
 }
 
