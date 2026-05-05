@@ -20,7 +20,7 @@ export default function NonNegotiables({ plan, update }: Props) {
         backgroundColor: colors.grayBox,
         borderRadius: 6,
         padding: 20,
-        marginBottom: 0,
+        marginBottom: 28,
       }}
     >
       <Text

@@ -15,7 +15,8 @@ const MONTH_NAMES = [
 ];
 
 function today() {
-  return new Date().toISOString().split("T")[0];
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 function toDateStr(year: number, month: number, day: number) {
@@ -95,17 +96,17 @@ export default function CalendarPicker({ markedDates, onDayPress }: Props) {
                 key={i}
                 onPress={() => !isFuture && onDayPress(dateStr)}
                 disabled={isFuture}
-                style={{ flex: 1, alignItems: "center", paddingVertical: 12 }}
+                style={{ flex: 1, alignItems: "center", paddingVertical: 6 }}
               >
                 <View
                   style={{
-                    width: 72, height: 72, borderRadius: 36,
+                    width: 40, height: 40, borderRadius: 20,
                     alignItems: "center", justifyContent: "center",
                     backgroundColor: isToday ? colors.ink : "transparent",
                   }}
                 >
                   <Text style={{
-                    fontSize: 20,
+                    fontSize: 16,
                     color: isFuture ? colors.faint : isToday ? colors.card : colors.ink,
                     fontWeight: isToday ? "700" : "400",
                   }}>
