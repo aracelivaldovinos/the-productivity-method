@@ -39,7 +39,7 @@ export default function PlannerScreen() {
   const isToday = date === today();
   const { plan, update, loading } = usePlanner(date, activeTab);
   const { width } = useWindowDimensions();
-  const isTablet = width >= 768;
+  const isTablet = width >= 1024;
 
   if (loading) {
     return (
