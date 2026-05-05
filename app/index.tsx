@@ -51,25 +51,53 @@ export default function PlannerScreen() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.bg }}>
-      {/* Title row with history button */}
-      <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 32, paddingBottom: 20, paddingHorizontal: isTablet ? 40 : 16 }}>
-        <View style={{ flex: 1 }} />
-        <Text
-          style={{
-            flex: 2, textAlign: "center", fontSize: 13, letterSpacing: 4,
-            color: colors.ink, fontStyle: "italic", fontFamily: "Georgia",
-          }}
-        >
-          8 - M I N U T E   D A I L Y   P L A N N I N G   M E T H O D
-        </Text>
-        <View style={{ flex: 1, alignItems: "flex-end", flexDirection: "row", justifyContent: "flex-end", gap: 8 }}>
-          <TouchableOpacity
-            onPress={() => router.push({ pathname: "/history", params: { tab: activeTab } })}
-            style={{ flexDirection: "row", alignItems: "center", gap: 5, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, borderColor: colors.faint, borderRadius: 4 }}
+      {/* Title row */}
+      <View style={{ paddingTop: 32, paddingBottom: 20, paddingHorizontal: isTablet ? 40 : 16 }}>
+        {/* Top row: History button right-aligned */}
+        <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
+          <View style={{ flex: 1 }} />
+          <Text
+            style={{
+              flex: 2, textAlign: "center", fontSize: 13, letterSpacing: 4,
+              color: colors.ink, fontStyle: "italic", fontFamily: "Georgia",
+            }}
           >
-            <Feather name="calendar" size={13} color={colors.muted} />
-            <Text style={{ fontSize: 11, color: colors.muted }}>History</Text>
-          </TouchableOpacity>
+            8 - M I N U T E   D A I L Y   P L A N N I N G   M E T H O D
+          </Text>
+          <View style={{ flex: 1, alignItems: "flex-end" }}>
+            <TouchableOpacity
+              onPress={() => router.push({ pathname: "/history", params: { tab: activeTab } })}
+              style={{ flexDirection: "row", alignItems: "center", gap: 5, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, borderColor: colors.faint, borderRadius: 4 }}
+            >
+              <Feather name="calendar" size={13} color={colors.muted} />
+              <Text style={{ fontSize: 11, color: colors.muted }}>History</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* Date navigator below title, centered */}
+        <View style={{ alignItems: "center" }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <TouchableOpacity
+              onPress={() => setDate(shiftDate(date, -1))}
+              style={{ width: 28, height: 28, borderRadius: 14, borderWidth: 1, borderColor: colors.faint, alignItems: "center", justifyContent: "center" }}
+            >
+              <Text style={{ color: colors.muted, fontSize: 14 }}>‹</Text>
+            </TouchableOpacity>
+            <View style={{ borderWidth: 1, borderColor: colors.faint, borderRadius: 4, paddingHorizontal: 12, paddingVertical: 5 }}>
+              <Text style={{ fontSize: 12, color: colors.ink }}>{formatDate(date)}</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => !isToday && setDate(shiftDate(date, 1))}
+              style={{ width: 28, height: 28, borderRadius: 14, borderWidth: 1, borderColor: isToday ? "#f0f0ee" : colors.faint, alignItems: "center", justifyContent: "center" }}
+            >
+              <Text style={{ color: isToday ? "#ccc" : colors.muted, fontSize: 14 }}>›</Text>
+            </TouchableOpacity>
+          </View>
+          {!isToday && (
+            <TouchableOpacity onPress={() => setDate(today())} style={{ marginTop: 4 }}>
+              <Text style={{ fontSize: 10, color: colors.accent, textDecorationLine: "underline" }}>Back to today</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 
@@ -107,32 +135,6 @@ export default function PlannerScreen() {
 
         {/* RIGHT COLUMN */}
         <View style={{ flex: isTablet ? 1 : undefined, padding: isTablet ? 32 : 20 }}>
-          {/* Date navigator — right aligned */}
-          <View style={{ alignItems: "flex-end", marginBottom: 24 }}>
-            <Text style={{ fontSize: 10, letterSpacing: 1.5, color: colors.muted, marginBottom: 6 }}>DATE</Text>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-              <TouchableOpacity
-                onPress={() => setDate(shiftDate(date, -1))}
-                style={{ width: 28, height: 28, borderRadius: 14, borderWidth: 1, borderColor: colors.faint, alignItems: "center", justifyContent: "center" }}
-              >
-                <Text style={{ color: colors.muted, fontSize: 14 }}>‹</Text>
-              </TouchableOpacity>
-              <View style={{ borderWidth: 1, borderColor: colors.faint, borderRadius: 4, paddingHorizontal: 12, paddingVertical: 5 }}>
-                <Text style={{ fontSize: 12, color: colors.ink }}>{formatDate(date)}</Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => !isToday && setDate(shiftDate(date, 1))}
-                style={{ width: 28, height: 28, borderRadius: 14, borderWidth: 1, borderColor: isToday ? "#f0f0ee" : colors.faint, alignItems: "center", justifyContent: "center" }}
-              >
-                <Text style={{ color: isToday ? "#ccc" : colors.muted, fontSize: 14 }}>›</Text>
-              </TouchableOpacity>
-            </View>
-            {!isToday && (
-              <TouchableOpacity onPress={() => setDate(today())} style={{ marginTop: 6 }}>
-                <Text style={{ fontSize: 10, color: colors.accent, textDecorationLine: "underline" }}>Back to today</Text>
-              </TouchableOpacity>
-            )}
-          </View>
           <TimeBlock plan={plan} update={update} />
           <FocusReview plan={plan} update={update} />
           <Reflection plan={plan} update={update} />
