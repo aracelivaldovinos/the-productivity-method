@@ -116,22 +116,19 @@ export default function PlannerScreen() {
           shadowOpacity: 0.06,
           shadowRadius: 4,
           elevation: 2,
-          flexDirection: isTablet ? "row" : "column",
-          alignItems: isTablet ? "flex-start" : undefined,
+          flexDirection: "column",
           position: "relative",
         }}
       >
         {/* LEFT COLUMN */}
-        <View style={{ flex: isTablet ? 1 : undefined, padding: isTablet ? 32 : 20 }}>
+        <View style={{ padding: isTablet ? 32 : 20 }}>
           <DailyFocus plan={plan} update={update} />
           <TodoTable plan={plan} update={update} />
           <NonNegotiables plan={plan} update={update} />
         </View>
 
-        {isTablet && <View style={{ width: 1, backgroundColor: "#e4e4e0", alignSelf: "stretch" }} />}
-
         {/* RIGHT COLUMN */}
-        <View style={{ flex: isTablet ? 1 : undefined, padding: isTablet ? 32 : 20 }}>
+        <View style={{ padding: isTablet ? 32 : 20 }}>
           {/* Date navigator */}
           <View style={{ alignItems: "flex-end", marginBottom: 24 }}>
             <Text style={{ fontSize: 10, letterSpacing: 1.5, color: colors.muted, marginBottom: 6 }}>DATE</Text>

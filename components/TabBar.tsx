@@ -21,6 +21,7 @@ export default function TabBar({ active, onChange }: Props) {
         flexDirection: "row",
         alignItems: "flex-end",
         paddingHorizontal: 40,
+        zIndex: 1,
         // Sits flush against the card below — no margin bottom
       }}
     >
@@ -64,7 +65,7 @@ export default function TabBar({ active, onChange }: Props) {
       })}
 
       {/* Fills the rest of the tab row with the card's top border */}
-      <View style={{ flex: 1, borderBottomWidth: 1, borderBottomColor: "#e4e4e0", marginBottom: 0, height: 12 }} />
+      <View style={{ flex: 1, borderBottomWidth: 1, borderBottomColor: "#e4e4e0", height: 12 }} />
     </View>
   );
 }
